@@ -68,5 +68,5 @@ def databento_fi_2010_load(path, seq_size, horizon, all_features):
     print("Unique labels in val:", np.unique(val_labels))
     print("Unique labels in test:", np.unique(test_labels))
 
-    return train_input.shape, train_labels.shape, val_input.shape, val_labels.shape, test_input.shape, test_labels.shape
+    return train_input, train_labels, val_input, val_labels, test_input, test_labels
     

@@ -30,6 +30,8 @@ def run(config: Config, accelerator):
     if dataset == "LOBSTER":
         training_stocks = config.dataset.training_stocks
         config.experiment.dir_ckpt = f"{dataset}_{training_stocks}_seq_size_{seq_size}_horizon_{horizon}_seed_{config.experiment.seed}"
+    elif dataset == "DATABENTO_FI_2010":
+        config.experiment.dir_ckpt = f"{dataset}_seq_size_{seq_size}_horizon_{horizon}_seed_{config.experiment.seed}"
     else:
         config.experiment.dir_ckpt = f"{dataset}_seq_size_{seq_size}_horizon_{horizon}_seed_{config.experiment.seed}"
 
