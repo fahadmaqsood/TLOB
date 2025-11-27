@@ -24,6 +24,10 @@ def hydra_app(config: Config):
         accelerator = "cpu"
     else:
         accelerator = "gpu"
+      
+    print(config.dataset.type)
+
+
     if config.dataset.type == DatasetType.FI_2010:
         if config.model.type.value == "MLPLOB" or config.model.type.value == "TLOB":
             config.model.hyperparameters_fixed["hidden_dim"] = 144
@@ -59,7 +63,7 @@ def hydra_app(config: Config):
             print("Data extracted.")
         except Exception as e:
             raise(f"Error downloading or extracting data: {e}")
-        
+
     elif config.dataset.type == cst.DatasetType.BTC and not config.experiment.is_data_preprocessed:
         data_builder = BTCDataBuilder(
         data_dir=cst.DATA_DIR,

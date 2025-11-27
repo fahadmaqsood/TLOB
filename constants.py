@@ -6,6 +6,7 @@ class DatasetType(Enum):
     LOBSTER = "LOBSTER"
     FI_2010 = "FI_2010"
     BTC = "BTC"
+    DATABENTO_FI_2010 = "DATABENTO_FI_2010"
     
 
 class ModelType(Enum):

@@ -48,6 +48,12 @@ class FI_2010(Dataset):
     batch_size: int = 32
 
 @dataclass
+class DATABENTO_FI_2010(Dataset):
+    type: DatasetType = DatasetType.DATABENTO_FI_2010
+    dates: list = field(default_factory=lambda: ["DATE_START", "DATE_END"])
+    batch_size: int = 32
+
+@dataclass
 class LOBSTER(Dataset):
     type: DatasetType = DatasetType.LOBSTER
     dates: list = field(default_factory=lambda: ["2015-01-02", "2015-01-30"])
@@ -72,7 +78,7 @@ class BTC(Dataset):
 @dataclass
 class Experiment:
     is_data_preprocessed: bool = False
-    is_wandb: bool = True
+    is_wandb: bool = False
     is_sweep: bool = False
     type: list = field(default_factory=lambda: ["TRAINING"])
     is_debug: bool = False
@@ -105,3 +111,4 @@ cs.store(group="model", name="deeplob", node=DeepLOB)
 cs.store(group="dataset", name="lobster", node=LOBSTER)
 cs.store(group="dataset", name="fi_2010", node=FI_2010)
 cs.store(group="dataset", name="btc", node=BTC)
+cs.store(group="dataset", name="databento_fi_2010", node=DATABENTO_FI_2010)

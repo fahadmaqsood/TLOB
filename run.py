@@ -11,13 +11,17 @@ from lightning.pytorch.callbacks.early_stopping import EarlyStopping
 from config.config import Config
 from models.engine import Engine
 from preprocessing.fi_2010 import fi_2010_load
+from preprocessing.databento_fi_2010 import databento_fi_2010_load
 from preprocessing.lobster import lobster_load
 from preprocessing.btc import btc_load
 from preprocessing.dataset import Dataset, DataModule
 import constants as cst
 from constants import DatasetType, SamplingType
-torch.serialization.add_safe_globals([omegaconf.listconfig.ListConfig])
 
+try:
+    torch.serialization.add_safe_globals([omegaconf.listconfig.ListConfig])
+except AttributeError:
+    pass
 
 def run(config: Config, accelerator):
     seq_size = config.model.hyperparameters_fixed["seq_size"]
@@ -54,9 +58,32 @@ def train(config: Config, trainer: L.Trainer, run=None):
     checkpoint_ref = config.experiment.checkpoint_reference
     checkpoint_path = os.path.join(cst.DIR_SAVED_MODEL, model_type.value, checkpoint_ref)
     dataset_type = config.dataset.type.value
+
+    print(dataset_type)
+
     if dataset_type == "FI_2010":
         path = cst.DATA_DIR + "/FI_2010"
         train_input, train_labels, val_input, val_labels, test_input, test_labels = fi_2010_load(path, seq_size, horizon, config.model.hyperparameters_fixed["all_features"])
+        train_set = Dataset(train_input, train_labels, seq_size)
+        val_set = Dataset(val_input, val_labels, seq_size)
+        test_set = Dataset(test_input, test_labels, seq_size)
+        if config.experiment.is_debug:
+            train_set.length = 1000
+            val_set.length = 1000
+            test_set.length = 10000
+        data_module = DataModule(
+            train_set=Dataset(train_input, train_labels, seq_size),
+            val_set=Dataset(val_input, val_labels, seq_size),
+            test_set=Dataset(test_input, test_labels, seq_size),
+            batch_size=config.dataset.batch_size,
+            test_batch_size=config.dataset.batch_size*4,
+            num_workers=4
+        )
+        test_loaders = [data_module.test_dataloader()]
+
+    elif dataset_type == "DATABENTO_FI_2010":
+        path = cst.DATA_DIR + "/DATABENTO"
+        train_input, train_labels, val_input, val_labels, test_input, test_labels = databento_fi_2010_load(path, seq_size, horizon, config.model.hyperparameters_fixed["all_features"])
         train_set = Dataset(train_input, train_labels, seq_size)
         val_set = Dataset(val_input, val_labels, seq_size)
         test_set = Dataset(test_input, test_labels, seq_size)

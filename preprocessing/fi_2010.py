@@ -14,6 +14,7 @@ def fi_2010_load(path, seq_size, horizon, all_features):
     dec_test3 = np.loadtxt(path + '/Test_Dst_NoAuction_ZScore_CF_9.txt')
     full_test = np.hstack((dec_test1, dec_test2, dec_test3))
     
+
     if horizon == 10:
         tmp = 5
     elif horizon == 20:
@@ -30,6 +31,8 @@ def fi_2010_load(path, seq_size, horizon, all_features):
     train_labels = full_train[-tmp, :].flatten()
     val_labels = full_val[-tmp, :].flatten()
     test_labels = full_test[-tmp, :].flatten()
+
+    print(np.unique(train_labels))
     
     train_labels = train_labels[seq_size-1:] - 1
     val_labels = val_labels[seq_size-1:] - 1
@@ -48,6 +51,12 @@ def fi_2010_load(path, seq_size, horizon, all_features):
     val_labels = torch.from_numpy(val_labels).long()
     test_input = torch.from_numpy(test_input).float()
     test_labels = torch.from_numpy(test_labels).long()
+
+    print("Unique labels in train:", np.unique(train_labels))
+    print("Unique labels in val:", np.unique(val_labels))
+    print("Unique labels in test:", np.unique(test_labels))
+
+
     return train_input, train_labels, val_input, val_labels, test_input, test_labels
     
     
