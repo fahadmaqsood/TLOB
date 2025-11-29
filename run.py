@@ -132,28 +132,28 @@ def train(config: Config, trainer: L.Trainer, run=None):
             if i == 0:
                 for j in range(2):
                     if j == 0:
-                        path = cst.DATA_DIR + "/" + training_stocks[i] + "/train.npy"
+                        path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/train.npy"
                         train_input, train_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
                     if j == 1:
-                        path = cst.DATA_DIR + "/" + training_stocks[i] + "/val.npy"
+                        path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/val.npy"
                         val_input, val_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
             else:
                 for j in range(2):
                     if j == 0:
-                        path = cst.DATA_DIR + "/" + training_stocks[i] + "/train.npy"
+                        path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/train.npy"
                         train_labels = torch.cat((train_labels, torch.zeros(seq_size+horizon-1, dtype=torch.long)), 0)
                         train_input_tmp, train_labels_tmp = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
                         train_input = torch.cat((train_input, train_input_tmp), 0)
                         train_labels = torch.cat((train_labels, train_labels_tmp), 0)
                     if j == 1:
-                        path = cst.DATA_DIR + "/" + training_stocks[i] + "/val.npy"
+                        path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/val.npy"
                         val_labels = torch.cat((val_labels, torch.zeros(seq_size+horizon-1, dtype=torch.long)), 0)
                         val_input_tmp, val_labels_tmp = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
                         val_input = torch.cat((val_input, val_input_tmp), 0)
                         val_labels = torch.cat((val_labels, val_labels_tmp), 0)
         test_loaders = []
         for i in range(len(testing_stocks)):
-            path = cst.DATA_DIR + "/" + testing_stocks[i] + "/test.npy"
+            path = cst.DATA_DIR + "/LOBSTER/" + testing_stocks[i] + "/test.npy"
             test_input, test_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
             test_set = Dataset(test_input, test_labels, seq_size)
             test_dataloader = DataLoader(

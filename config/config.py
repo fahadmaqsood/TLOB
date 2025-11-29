@@ -56,12 +56,12 @@ class DATABENTO_FI_2010(Dataset):
 @dataclass
 class LOBSTER(Dataset):
     type: DatasetType = DatasetType.LOBSTER
-    dates: list = field(default_factory=lambda: ["2015-01-02", "2015-01-30"])
+    dates: list = field(default_factory=lambda: ["2025-09-10", "2025-09-15"])
     sampling_type: SamplingType = SamplingType.QUANTITY
     sampling_time: str = "1s"
     sampling_quantity: int = 500
-    training_stocks: list = field(default_factory=lambda: ["INTC"])
-    testing_stocks: list = field(default_factory=lambda: ["INTC"])
+    training_stocks: list = field(default_factory=lambda: ["WLDS"])
+    testing_stocks: list = field(default_factory=lambda: ["WLDS"])
     batch_size: int = 128
     
 @dataclass

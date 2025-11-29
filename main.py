@@ -42,7 +42,7 @@ def hydra_app(config: Config):
         # prepare the datasets, this will save train.npy, val.npy and test.npy in the data directory
         data_builder = LOBSTERDataBuilder(
             stocks=config.dataset.training_stocks,
-            data_dir=cst.DATA_DIR,
+            data_dir=cst.DATA_DIR + "/LOBSTER/",
             date_trading_days=config.dataset.dates,
             split_rates=cst.SPLIT_RATES,
             sampling_type=config.dataset.sampling_type,
