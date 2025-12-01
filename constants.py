@@ -68,6 +68,6 @@ DIR_SAVED_MODEL = "data/checkpoints"
 DATA_DIR = "data"
 RECON_DIR = "data/reconstructions"
 PROJECT_NAME = "EvolutionData"
-SPLIT_RATES = [0.8, 0.1, 0.1]
+SPLIT_RATES = [0.5, 0.25, 0.25]
 WANDB_API = ""
 WANDB_USERNAME = ""

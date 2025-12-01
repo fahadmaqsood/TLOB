@@ -134,9 +134,11 @@ def train(config: Config, trainer: L.Trainer, run=None):
                     if j == 0:
                         path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/train.npy"
                         train_input, train_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
+                        print("Training labels Min/Max:", torch.min(train_labels), torch.max(train_labels))
                     if j == 1:
                         path = cst.DATA_DIR + "/LOBSTER/" + training_stocks[i] + "/val.npy"
                         val_input, val_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
+                        print("Validation labels Min/Max:", torch.min(val_labels), torch.max(val_labels))
             else:
                 for j in range(2):
                     if j == 0:
@@ -155,6 +157,7 @@ def train(config: Config, trainer: L.Trainer, run=None):
         for i in range(len(testing_stocks)):
             path = cst.DATA_DIR + "/LOBSTER/" + testing_stocks[i] + "/test.npy"
             test_input, test_labels = lobster_load(path, config.model.hyperparameters_fixed["all_features"], cst.LEN_SMOOTH, horizon, seq_size)
+            print("Test labels Min/Max:", torch.min(test_labels), torch.max(test_labels))
             test_set = Dataset(test_input, test_labels, seq_size)
             test_dataloader = DataLoader(
                 dataset=test_set,
