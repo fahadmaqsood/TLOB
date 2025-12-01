@@ -22,14 +22,16 @@ def z_score_orderbook(data, mean_size=None, mean_prices=None, std_size=None, std
     price_cols = data.columns[0::2]
     size_cols = data.columns[1::2]
 
+    eps = np.finfo(float).eps
+
     #apply the z score to the original data
     for col in size_cols:
         data[col] = data[col].astype("float64")
-        data[col] = (data[col] - mean_size) / std_size
+        data[col] = (data[col] - mean_size) / (std_size + eps)
 
     for col in price_cols:
         data[col] = data[col].astype("float64")
-        data[col] = (data[col] - mean_prices) / std_prices
+        data[col] = (data[col] - mean_prices) / (std_prices + eps)
 
     # check if there are null values, then raise value error
     if data.isnull().values.any():
@@ -57,11 +59,13 @@ def normalize_messages(data, mean_size=None, mean_prices=None, std_size=None,  s
         mean_depth = data["depth"].mean()
         std_depth = data["depth"].std()
 
+    eps = np.finfo(float).eps
+
     #apply the z score to the original data
-    data["time"] = (data["time"] - mean_time) / std_time
-    data["size"] = (data["size"] - mean_size) / std_size
-    data["price"] = (data["price"] - mean_prices) / std_prices
-    data["depth"] = (data["depth"] - mean_depth) / std_depth
+    data["time"] = (data["time"] - mean_time) / (std_time + eps)
+    data["size"] = (data["size"] - mean_size) / (std_size + eps)
+    data["price"] = (data["price"] - mean_prices) / (std_prices + eps)
+    data["depth"] = (data["depth"] - mean_depth) / (std_depth + eps)
     # check if there are null values, then raise value error
     if data.isnull().values.any():
         raise ValueError("data contains null value")

@@ -95,7 +95,7 @@ class LOBSTERDataBuilder:
                                        "sell8", "vsell8", "buy8", "vbuy8",
                                        "sell9", "vsell9", "buy9", "vbuy9",
                                        "sell10", "vsell10", "buy10", "vbuy10"],
-                         "message": ["time", "event_type", "order_id", "size", "price", "direction"]}
+                         "message": ["time", "event_type", "order_id", "size", "price", "direction", "depth"]}
         self.num_trading_days = len(os.listdir(path))//2
         split_days = self._split_days()
         split_days = [i * 2 for i in split_days]
@@ -193,8 +193,10 @@ class LOBSTERDataBuilder:
                     if (i % 2) == 0:
                         if i == 0:
                             train_messages = pd.read_csv(f, names=COLUMNS_NAMES["message"])
+                            train_messages = train_messages.drop(columns=["depth"])
                         else:
                             train_message = pd.read_csv(f, names=COLUMNS_NAMES["message"])
+                            train_message = train_message.drop(columns=["depth"])
 
                     else:
                         if i == 1:
@@ -282,6 +284,11 @@ class LOBSTERDataBuilder:
         train = int(self.num_trading_days * self.split_rates[0])
         val = int(self.num_trading_days * self.split_rates[1]) + train
         test = int(self.num_trading_days * self.split_rates[2]) + val
+        
+        train = 1
+        val = 2
+        test = 3
+
         print(f"There are {train} days for training, {val - train} days for validation and {test - val} days for testing")
         return [train, val, test]
     
@@ -344,9 +351,6 @@ class LOBSTERDataBuilder:
             
         dataframes = reset_indexes(dataframes)
         
-        # drop index column in messages
-        dataframes[0] = dataframes[0].drop(columns=["order_id"])
-
         # do the difference of time row per row in messages and subsitute the values with the differences
         # Store the initial value of the "time" column
         first_time = dataframes[0]["time"].values[0]
@@ -396,5 +400,9 @@ class LOBSTERDataBuilder:
         
         dataframes[0]["direction"] = dataframes[0]["direction"] * dataframes[0]["event_type"].apply(
             lambda x: -1 if x == 4 else 1)
+
+        # drop index column in messages
+        dataframes[0] = dataframes[0].drop(columns=["order_id"])
+
             
         return dataframes[1], dataframes[0]
